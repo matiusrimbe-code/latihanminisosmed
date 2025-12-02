@@ -11,9 +11,39 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('minisosmed', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id');
+            $table->text('content');
+            $table->string('image_url');
             $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('comments', function (Blueprint $table) {
+            $table->id();
+            $table->integer('user_id');
+            $table->integer('post_id');
+            $table->text('comment_content');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('likes', function (Blueprint $table) {
+            $table->id();
+            $table->integer('user_id');
+            $table->integer('post_id');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('messages', function (Blueprint $table) {
+            $table->id();
+            $table->integer('sender_id');
+            $table->integer('receiver_id');
+            $table->text('message_content');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -22,6 +52,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('minisosmed');
+        Schema::dropIfExists('posts');
+        Schema::dropIfExists('comments');
+        Schema::dropIfExists('likes');
+        Schema::dropIfExists('messages');
     }
 };
