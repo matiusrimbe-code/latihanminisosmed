@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MessageController extends Controller
 {
     public function store(Request $request) {
         $validator = Validator::make($request->all(), [
-            'sender_id' => 'required',
             'receiver_id' => 'required',
             'message_content' => 'required|string|max:500'
         ]);
@@ -22,8 +22,10 @@ class MessageController extends Controller
             ], 400);
         }
 
+        $user = JWTAuth::parseToken()->authenticate();
+
         $message = Message::create([
-            'sender_id' => $request->sender_id,
+            'sender_id' => $user->id,
             'receiver_id' => $request->receiver_id,
             'message_content' => $request->message_content,
         ]);
